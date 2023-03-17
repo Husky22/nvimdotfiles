@@ -1,12 +1,25 @@
 -- Vim Basics
 -- ====================
 -- Leader Key
+
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.python3_host_prog = "~/.virtualenvs/neovim/bin/python3.9"
 
 
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
 vim.opt.relativenumber = true
 vim.opt.number = true
@@ -38,8 +51,6 @@ vim.api.nvim_set_keymap('v', '<', '<gc', {silent=true, noremap=true})
 vim.opt.undodir = vim.fn.expand("~/.vim/undo-dir")
 vim.opt.undofile = true
 
--- Faster Loading
-require 'impatient'.enable_profile()
 
 
 -- Reload all my lua files even though they are cached

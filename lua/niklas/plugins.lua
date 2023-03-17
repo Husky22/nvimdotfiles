@@ -1,248 +1,211 @@
--- Packer bootstrapping to automatically install on each system
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
-end
 
-local packer_bootstrap = ensure_packer()
+require("lazy").setup({
+	{'wbthomason/packer.nvim'},
+	{'lewis6991/impatient.nvim'},
+	{'nvim-lua/plenary.nvim'},
 
+	-- Colorschemes
+	{'kaicataldo/material.vim'},
+	{
+		'folke/tokyonight.nvim',
+		lazy = false, -- make sure we load this during startup if it is your main colorscheme
+		priority = 1000, -- make sure to load this before all the other start plugins
+	},
 
-require('packer').startup(function(use)
+	-- LSP
+	{'williamboman/mason.nvim'},
+	{'neovim/nvim-lspconfig'},
+	{'hrsh7th/cmp-nvim-lsp'},
+	{'hrsh7th/cmp-nvim-lsp-signature-help'},
+	{'hrsh7th/cmp-nvim-lua'},
+	{'hrsh7th/cmp-buffer'},
+	{'hrsh7th/cmp-path'},
+	{'hrsh7th/cmp-cmdline'},
+	{'hrsh7th/cmp-calc'},
+	{'https://gitlab.com/msvechla/cmp-jira.git'},
+	{'hrsh7th/nvim-cmp'},
+	{'onsails/lspkind-nvim'},
 
-  use 'wbthomason/packer.nvim'
-  use 'lewis6991/impatient.nvim'
-  use 'nvim-lua/plenary.nvim'
-  
-  -- Colorschemes
-  use 'kaicataldo/material.vim'
-  use 'folke/tokyonight.nvim'
+	-- Snippets
+	{'L3MON4D3/LuaSnip'},
+	{'saadparwaiz1/cmp_luasnip'},
+	{'rafamadriz/friendly-snippets'},
 
-  -- LSP
-  use 'williamboman/mason.nvim'
-  use 'neovim/nvim-lspconfig'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-nvim-lsp-signature-help'
-  use 'hrsh7th/cmp-nvim-lua'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
-  use 'hrsh7th/cmp-calc'
-  use 'https://gitlab.com/msvechla/cmp-jira.git'
-  use 'hrsh7th/nvim-cmp'
-  use "onsails/lspkind-nvim"
+	-- Treesitter
+	{'nvim-treesitter/nvim-treesitter-textobjects'},
+	{'RRethy/nvim-treesitter-textsubjects'},
+	{'nvim-treesitter/nvim-treesitter',
+		build = ':TSUpdate',
+	},
 
-  -- Snippets
-  use 'L3MON4D3/LuaSnip'
-  use 'saadparwaiz1/cmp_luasnip'
-  use 'rafamadriz/friendly-snippets'
-
-  -- Treesitter
-  use {"nvim-treesitter/nvim-treesitter-textobjects"}
-  use {"RRethy/nvim-treesitter-textsubjects"}
-  use {'nvim-treesitter/nvim-treesitter',
-	  run = ':TSUpdate'
-  }
-
-  -- Which-key
-  use 'folke/which-key.nvim'
+	-- Which-key
+	{'folke/which-key.nvim'},
 
 
-  -- Statusline
-  use 'nvim-lualine/lualine.nvim'
+	-- Statusline
+	{'nvim-lualine/lualine.nvim'},
 
-  -- Editing
-  use 'machakann/vim-sandwich'
-  use 'jiangmiao/auto-pairs'
-  use 'tommcdo/vim-exchange'
-
-  -- Refactoring
-  use {
-	  "ThePrimeagen/refactoring.nvim",
-	  requires = {
-		  {"nvim-lua/plenary.nvim"},
-		  {"nvim-treesitter/nvim-treesitter"}
-	  },
-	  config = function()
-		  require('refactoring').setup({})
-	  end,
-  }
-
-  -- Magic Regex
-  use {'coot/EnchantedVim',
-	  requires = {
-		  {'coot/CRDispatcher'},
-
-	  },
-	  config = function ()
-	  end,
-  }
-
-  -- Commenting
-  use {
-	  'numToStr/Comment.nvim',
-  }
-
-  -- Fuzzy Finding
-  use { 'junegunn/fzf', run = './install --bin', }
-  use { 'junegunn/fzf.vim' }
-  use { 'ibhagwan/fzf-lua',
-	  -- optional for icon support
-	  requires = { 'kyazdani42/nvim-web-devicons' }
-  }
-
-  -- Git
-  use {'lewis6991/gitsigns.nvim',
-  config = function()
-	  require('gitsigns').setup()
-  end
-  }
-
-  -- Hovering
-  use {
-	  "lewis6991/hover.nvim",
-	  config = function()
-		  require("hover").setup {
-			  init = function()
-				  -- Require providers
-				  require('hover.providers.lsp')
-				  require('hover.providers.jira')
-				  require('hover.providers.gh')
-				  -- require('hover.providers.man')
-				  -- require('hover.providers.dictionary')
-			  end,
-			  preview_opts = {
-				  border = nil
-			  },
-			  -- Whether the contents of a currently open hover window should be moved
-			  -- to a :h preview-window when pressing the hover keymap.
-			  preview_window = false,
-			  title = true
-		  }
-
-		  -- Setup keymaps
-		  vim.keymap.set("n", "<localleader>i", require("hover").hover, {desc = "hover.nvim"})
-	  end
-  }
-
-  -- Tools
-  use {"svermeulen/vim-subversive"}
+	-- Editing
+	{'machakann/vim-sandwich'},
+	{'jiangmiao/auto-pairs'},
+	{'tommcdo/vim-exchange'},
 
 
-  use {
-	  "smjonas/live-command.nvim",
-	  -- live-command supports semantic versioning via tags
-	  -- tag = "1.*",
-	  config = function()
-		  require("live-command").setup {
-			  commands = {
-				  Norm = { cmd = "norm" },
-			  },
-		  }
-	  end,
-  }
+	-- Magic Regex
+	{'coot/EnchantedVim',
+		dependencies = {
+			{'coot/CRDispatcher'},
 
-  -- Interactive Coding
-  use 'Olical/conjure'
-  use 'PaterJason/cmp-conjure'
-  use 'tpope/vim-dispatch'
-  use 'clojure-vim/vim-jack-in'
-  use 'radenling/vim-dispatch-neovim'
+		},
+	},
 
-  -- Python
-  -- use 'vim-scripts/indentpython.vim'
-  
+	-- Commenting
+	{ 'numToStr/Comment.nvim'},
 
-  -- FileTree
-  use {'kyazdani42/nvim-web-devicons'}
-  use {'kyazdani42/nvim-tree.lua',
-  config = function()
-	  require 'nvim-tree'.setup()
-  end}
+	-- Fuzzy Finding
+	{ 'junegunn/fzf', run = './install --bin', },
+	{ 'junegunn/fzf.vim' },
+	{ 'ibhagwan/fzf-lua',
+		-- optional for icon support
+		dependencies = { 'kyazdani42/nvim-web-devicons' },
+	},
 
-  -- Testing
-  use {
-	  "nvim-neotest/neotest",
-	  requires = {
-		  "nvim-lua/plenary.nvim",
-		  "nvim-treesitter/nvim-treesitter",
-		  "antoinemadec/FixCursorHold.nvim",
-		  "nvim-neotest/neotest-python",
-		  "rouge8/neotest-rust",
-	  },
-	  config = function()
-		  require("neotest").setup({
-			  adapters = {
-				  require("neotest-python")({
-					  args = {"--capture", "tee-sys"}
-				  }),
-				  require("neotest-rust")
-			  },
-		  })
-	  end
-  }
+	-- Git
+	{'lewis6991/gitsigns.nvim',
+		config = function()
+			require('gitsigns').setup()
+		end
+	},
 
+	-- Hovering
+	{
+		"lewis6991/hover.nvim",
+		config = function()
+			require("hover").setup {
+				init = function()
+					-- Require providers
+					require('hover.providers.lsp')
+					require('hover.providers.jira')
+					require('hover.providers.gh')
+					-- require('hover.providers.man')
+					-- require('hover.providers.dictionary')
+				end,
+				preview_opts = {
+					border = nil
+				},
+				-- Whether the contents of a currently open hover window should be moved
+				-- to a :h preview-window when pressing the hover keymap.
+				preview_window = false,
+				title = true
+			}
 
-   -- Visual Help
-   use 'psliwka/vim-smoothie'
+			-- Setup keymaps
+			vim.keymap.set("n", "<localleader>i", require("hover").hover, {desc = "hover.nvim"})
+		end
+	},
 
-   -- Macro Debugging
-   use 'rbong/vim-buffest'
-
-   use {'stevearc/qf_helper.nvim',
-   config = function()
-	   require('qf_helper').setup()
-   end
-   }
-
-   -- Tpope
-   use 'tpope/vim-unimpaired'
-   use 'tpope/vim-repeat'
-   use 'tpope/vim-abolish'
-
-   -- Git
-   use {"tpope/vim-fugitive"}
-   use {"tpope/vim-rhubarb"}
-   use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
-
-   -- S-Expressions
-   use {
-	   'guns/vim-sexp',
-	   ft = 'clojure',
-   }
-   use 'bhurlow/vim-parinfer'
-
-   -- Markdown
-   use({
-	   "iamcco/markdown-preview.nvim",
-	   run = function() vim.fn["mkdp#util#install"]() end,
-   })
+	-- Tools
+	{"svermeulen/vim-subversive"},
 
 
-   -- OrgMode
-   use {
-	   "nvim-neorg/neorg",
-	   requires = "nvim-lua/plenary.nvim"
-   }
+	{
+		"smjonas/live-command.nvim",
+		-- live-command supports semantic versioning via tags
+		-- tag = "1.*",
+		config = function()
+			require("live-command").setup {
+				commands = {
+					Norm = { cmd = "norm" },
+				},
+			}
+		end,
+	},
 
-   -- Rust
-   use 'simrat39/rust-tools.nvim'
+	-- Interactive Coding
+	{'Olical/conjure'},
+	{'PaterJason/cmp-conjure'},
+	{'tpope/vim-dispatch'},
+	{'clojure-vim/vim-jack-in'},
+	{'radenling/vim-dispatch-neovim'},
 
-   -- EditorConfig
-   use 'editorconfig/editorconfig-vim'
+	-- Python
+	-- use 'vim-scripts/indentpython.vim'
 
-   -- Go
-   use 'ray-x/go.nvim'
-   use 'ray-x/guihua.lua'
 
-   if packer_bootstrap then
-	   require('packer').sync()
-   end
-end)
+	-- FileTree
+	{'kyazdani42/nvim-web-devicons'},
+	{'kyazdani42/nvim-tree.lua',
+		config = function()
+			require 'nvim-tree'.setup()
+		end,
+	},
+
+	-- Testing
+	{
+		"nvim-neotest/neotest",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"antoinemadec/FixCursorHold.nvim",
+			"nvim-neotest/neotest-python",
+			"rouge8/neotest-rust",
+		},
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					require("neotest-python")({
+						args = {"--capture", "tee-sys"}
+					}),
+					require("neotest-rust")
+				},
+			})
+		end
+	},
+
+
+	-- Visual Help
+	{'psliwka/vim-smoothie'},
+
+	-- Macro Debugging
+	{'rbong/vim-buffest'},
+
+	{'stevearc/qf_helper.nvim',
+		config = function()
+			require('qf_helper').setup()
+		end,
+	},
+
+	-- Tpope
+	{'tpope/vim-unimpaired'},
+	{'tpope/vim-repeat'},
+	{'tpope/vim-abolish'},
+
+	-- Git
+	{'tpope/vim-fugitive'},
+	{'tpope/vim-rhubarb'},
+	{ 'TimUntersberger/neogit', dependencies = 'nvim-lua/plenary.nvim' },
+
+	-- S-Expressions
+	{ 'guns/vim-sexp',
+		ft = 'clojure',
+	},
+	{'bhurlow/vim-parinfer'},
+
+
+	-- Rust
+	{'simrat39/rust-tools.nvim',
+		ft = 'rust',
+	},
+
+	-- EditorConfig
+	{ 'editorconfig/editorconfig-vim'},
+
+	-- Go
+	{ 'ray-x/go.nvim',
+		ft = 'go',
+	},
+	{ 'ray-x/guihua.lua'},
+
+})
 
 
