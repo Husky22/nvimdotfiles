@@ -85,3 +85,7 @@ bind('n', '<leader>To', ":lua require('neotest').output.open({enter = true})<CR>
 bind('n', '<C-N>', ':QNext<CR>', {silent = true})
 bind('n', '<C-P>', ':QPrev<CR>', {silent = true})
 
+vim.g.copilot_no_tab_map = true
+bind("i", "<C-g>", 'copilot#Accept("<CR>")', {noremap=true, silent = true, expr = true, replace_keycodes = false})
+
+

@@ -155,6 +155,15 @@ wk.register({
     }, {prefix = '<leader>'})
 
 wk.register({
+        t = {
+            name = "TrailBlazer",
+	    c = { ":TrailBlazerNewTrailMark<cr>", "New Trail Mark" },
+	    n = { ":TrailBlazerPeekMoveNextDown<cr>", "Next Mark" },
+	    p = { ":TrailBlazerPeekMovePreviousUp<cr>", "Prev Mark" },
+        },
+    }, {prefix = '<leader>'})
+
+wk.register({
         c = {
             name = "Comment",
 	    c = { 'toggle comment', mode = "n" },

@@ -5,7 +5,8 @@
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
-vim.g.python3_host_prog = "~/.virtualenvs/neovim/bin/python3.9"
+-- vim.g.python3_host_prog = "~/.virtualenvs/neovim/bin/python3.9"
+vim.g.python3_host_prog = "~/Documents/Programmieren/Python/neovim_client/venv/bin/python3.11"
 
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -45,6 +46,8 @@ vim.api.nvim_set_keymap('n', 'k', 'gk', {silent=true, noremap=true})
 -- Keep selection after indenting
 vim.api.nvim_set_keymap('v', '>', '>gv', {silent=true, noremap=true})
 vim.api.nvim_set_keymap('v', '<', '<gc', {silent=true, noremap=true})
+
+vim.api.nvim_set_keymap('v', '<C-r>', '"hy:%s@<C-r>h@@g<left><left>', {silent=true, noremap=true})
 
 
 -- UndoDir

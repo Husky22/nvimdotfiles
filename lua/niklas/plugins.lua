@@ -13,23 +13,30 @@ require("lazy").setup({
 	},
 
 	-- LSP
-	{'williamboman/mason.nvim'},
-	{'neovim/nvim-lspconfig'},
-	{'hrsh7th/cmp-nvim-lsp'},
-	{'hrsh7th/cmp-nvim-lsp-signature-help'},
-	{'hrsh7th/cmp-nvim-lua'},
-	{'hrsh7th/cmp-buffer'},
-	{'hrsh7th/cmp-path'},
-	{'hrsh7th/cmp-cmdline'},
-	{'hrsh7th/cmp-calc'},
-	{'https://gitlab.com/msvechla/cmp-jira.git'},
-	{'hrsh7th/nvim-cmp'},
-	{'onsails/lspkind-nvim'},
+	{'VonHeikemen/lsp-zero.nvim',
+		branch = 'v1.x',
+		dependencies = {
+			-- LSP Support
+			{'neovim/nvim-lspconfig'},             -- Required
+			{'williamboman/mason.nvim'},           -- Optional
+			{'williamboman/mason-lspconfig.nvim'}, -- Optional
 
-	-- Snippets
-	{'L3MON4D3/LuaSnip'},
-	{'saadparwaiz1/cmp_luasnip'},
-	{'rafamadriz/friendly-snippets'},
+			-- Autocompletion
+			{'hrsh7th/nvim-cmp'},         -- Required
+			{'hrsh7th/cmp-nvim-lsp'},     -- Required
+			{'hrsh7th/cmp-buffer'},       -- Optional
+			{'hrsh7th/cmp-path'},         -- Optional
+			{'hrsh7th/cmp-calc'},         -- Optional
+			{'hrsh7th/cmp-cmdline'},         -- Optional
+			{'saadparwaiz1/cmp_luasnip'}, -- Optional
+			{'hrsh7th/cmp-nvim-lua'},     -- Optional
+
+			-- Snippets
+			{'L3MON4D3/LuaSnip'},             -- Required
+			{'rafamadriz/friendly-snippets'}, -- Optional
+		}
+	},
+
 
 	-- Treesitter
 	{'nvim-treesitter/nvim-treesitter-textobjects'},
@@ -183,7 +190,14 @@ require("lazy").setup({
 	-- Git
 	{'tpope/vim-fugitive'},
 	{'tpope/vim-rhubarb'},
-	{ 'TimUntersberger/neogit', dependencies = 'nvim-lua/plenary.nvim' },
+	{"NeogitOrg/neogit",
+	dependencies = {
+		"nvim-lua/plenary.nvim",         -- required
+		"nvim-telescope/telescope.nvim", -- optional
+		"sindrets/diffview.nvim",        -- optional
+		"ibhagwan/fzf-lua",              -- optional
+	},
+	config = true},
 
 	-- S-Expressions
 	{ 'guns/vim-sexp',
@@ -205,6 +219,77 @@ require("lazy").setup({
 		ft = 'go',
 	},
 	{ 'ray-x/guihua.lua'},
+
+	-- Trailblazer faster marks
+	{'LeonHeidelbach/trailblazer.nvim',
+		config=function()
+			require("trailblazer").setup()
+		end,
+	},
+	{"shortcuts/no-neck-pain.nvim", version = "*"},
+	-- Copilot
+	{'github/copilot.vim'},
+
+	-- Firenvim
+	{'glacambre/firenvim',
+
+	-- Lazy load firenvim
+	-- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+	cond = not not vim.g.started_by_firenvim,
+	build = function()
+		require("lazy").load({ plugins = "firenvim", wait = true })
+		vim.fn["firenvim#install"](0)
+	end
+	},
+
+	-- Justfiles
+	{'NoahTheDuke/vim-just'},
+
+	{"rest-nvim/rest.nvim",
+	dependencies = "nvim-lua/plenary.nvim" ,
+	config = function()
+		require("rest-nvim").setup({
+			-- Open request results in a horizontal split
+			result_split_horizontal = false,
+			-- Keep the http file buffer above|left when split horizontal|vertical
+			result_split_in_place = false,
+			-- Skip SSL verification, useful for unknown certificates
+			skip_ssl_verification = false,
+			-- Encode URL before making request
+			encode_url = true,
+			-- Highlight request on run
+			highlight = {
+				enabled = true,
+				timeout = 150,
+			},
+			result = {
+				-- toggle showing URL, HTTP info, headers at top the of result window
+				show_url = true,
+				-- show the generated curl command in case you want to launch
+				-- the same request via the terminal (can be verbose)
+				show_curl_command = false,
+				show_http_info = true,
+				show_headers = true,
+				-- executables or functions for formatting response body [optional]
+				-- set them to false if you want to disable them
+				formatters = {
+					json = "jq",
+					html = function(body)
+						return vim.fn.system({"tidy", "-i", "-q", "-"}, body)
+					end
+				},
+			},
+			-- Jump to request line on run
+			jump_to_request = false,
+			env_file = '.env',
+			custom_dynamic_variables = {},
+			yank_dry_run = true,
+		})
+		vim.keymap.set("n", "<localleader>ee", require("rest-nvim").run, {desc = "hover.nvim"})
+	end
+	}
+	
+
 
 })
 
