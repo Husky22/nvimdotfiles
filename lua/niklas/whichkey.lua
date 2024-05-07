@@ -6,15 +6,16 @@ wk.register({
             name = "Files",
             s = {':w<cr>', 'Save File'},
             b = {'<cmd>NvimTreeOpen<cr>', 'Browse Tree'},
-            f = {function()
+            -- f = {function()
 
-                local handle = io.popen("git rev-parse --show-toplevel")
-                local git_root = handle:read("*a")
-                handle:close()
-                print(git_root)
-                require'fzf-lua'.files({cwd=git_root})
-            end
-            , 'find in git'},
+            --     local handle = io.popen("git rev-parse --show-toplevel")
+            --     local git_root = handle:read("*a")
+            --     handle:close()
+            --     print(git_root)
+            --     require'fzf-lua'.files({cwd=git_root})
+            -- end
+            -- , 'find in git'},
+	    f = {'<cmd>FzfLua files<cr>', 'Find File'},
             g = {"<cmd>FzfLua live_grep<cr>", 'grep git'},
             d = {"<cmd>NvimTreeOpen<cr>", 'tree'},
             t = {':lua require"fzf-lua".tags({fzf_args="--delimiter=: --with-nth=2 "})<cr>', 'tags'},

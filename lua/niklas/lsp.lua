@@ -1,4 +1,5 @@
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = "yes"
+
 
 local lsp = require('lsp-zero').preset({
   name = 'minimal',
@@ -7,7 +8,20 @@ local lsp = require('lsp-zero').preset({
   suggest_lsp_servers = false,
 })
 
+require('mason').setup({})
+require('mason-lspconfig').setup({
+  handlers = {
+    lsp.default_setup,
+    rust_analyzer = lsp.noop,
+  }
+})
+
 local cmp = require('cmp')
+cmp.setup {
+	sources = {
+		{name = 'conjure'},
+	}
+}
 
 lsp.setup_nvim_cmp({
   mapping = lsp.defaults.cmp_mappings({
@@ -45,20 +59,12 @@ lsp.on_attach(function(client, bufnr)
 	vim.keymap.set("n", "<localleader>f", vim.lsp.buf.format, bufopts)
 end)
 
+if vim.lsp.inlay_hint then
+  vim.keymap.set("n", "<leader>uh", function() if vim.lsp.inlay_hint.is_enabled() then vim.lsp.inlay_hint.enable(0, false) else vim.lsp.inlay_hint.enable(0, true) end end, { desc = "Toggle Inlay Hints" })
+end
 
 
 lsp.setup()
-
--- initialize rust_analyzer with rust-tools
--- see :help lsp-zero.build_options()
-local rust_lsp = lsp.build_options('rust_analyzer', {
-  single_file_support = false,
-  on_attach = function(client, bufnr)
-    print('hello rust-tools')
-  end
-})
-
-require('rust-tools').setup({server = rust_lsp})
 
 
 vim.diagnostic.config({

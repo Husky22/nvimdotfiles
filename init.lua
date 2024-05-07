@@ -105,3 +105,4 @@ require 'niklas.configs'
 
 -- Load Macros
 require 'niklas.macros'
+

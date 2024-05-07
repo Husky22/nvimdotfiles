@@ -36,3 +36,5 @@ let g:VeryMagic = 0
 vim.g['conjure#extract#tree_sitter#enabled'] = true
 
 require("go").setup()
+
+vim.g.copilot_enabled = false
